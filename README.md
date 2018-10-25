@@ -184,12 +184,10 @@ You might need to unzip and re-format the file to satisfy the requirements. The 
 This is the file for initialized structure. You can generate one with your data at the step: https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq#run-the-initialization-part-within-the-container
 
 If you want to use other initial structure, please make sure that file has the following format:
-	* __First line__: 
-	
-		some pairs of integers (p1,p2) separated by \t character, each interger denotes the index of path and (p1,p2) means that these two paths are connected.
+	* __First line__: 	
+	some pairs of integers (p1,p2) separated by \t character, each interger denotes the index of path and (p1,p2) means that these two paths are connected.
 	* __Second Line__: 
-	
-		(cn,p) seperated by \t, For each of this, means that the cell "cn" is assigned to path "p". Note that the cell_names must be the same as in your data file.
+	(cn,p) seperated by \t, For each of this, means that the cell "cn" is assigned to path "p". Note that the cell_names must be the same as in your data file.
 	
 	Example file:   
 	[example file for initiali structure](/init_cluster_treutlein2014_lung.txt)
