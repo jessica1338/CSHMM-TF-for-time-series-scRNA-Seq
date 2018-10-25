@@ -48,7 +48,7 @@ You can use the following command to generate some of the result/visualization i
 python example_train_and_analysis.py
 ```
 
-You can also look at the ipython notebook: example_train_and_analysis.ipynb
+You can also look at the ipython notebook: https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq/blob/master/example_train_and_analysis.ipynb
 
 
 ## Run your data on docker container
@@ -130,6 +130,13 @@ optional arguments:
 
 ```
 
+## Some steps on how to train/analyze on your dataset
+You can use the provided scdiff_init.py to get initialized model structure, and CSHMM_TF_train_release.py to train your model (run_TF.sh is the example script of how to use it).
+After you finished the training (it will take a while), you will see some .pickle are generated for each epoch. Each of these file is the model file that is a python dictionary that stores the model parameter and cell/TF assignments.  
+
+For analyze, see https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq/blob/master/example_train_and_analysis.ipynb for the example code for generating the analyzing results and example output figures
+
+For preparing dataset, see the following section.
 
 ## INPUTS AND PRE-PROCESSING (We use the same input format as SCDIFF, so most of the following description are from their github page: https://github.com/phoenixding/scdiff/blob/master/README.md)
 
@@ -191,6 +198,5 @@ If you want to use other initial structure, please make sure that file has the f
 	[example file for initiali structure](/init_cluster_treutlein2014_lung.txt)
 
 
-##RESULTS
-(working)
+
 
