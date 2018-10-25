@@ -50,3 +50,17 @@ python example_train_and_analysis.py
 You can also look at the ipython notebook: example_train_and_analysis.ipynb
 
 
+## Run your data on docker container
+
+To mount your data on a local disk to a location within the docker filesystem, use the ```-v``` option:
+
+```
+docker run -it -v [data folder on your comupter]:[data path you want on docker container] cshmm_tf_release /bin/bash
+```
+For example:
+```
+docker run -it -v ~/my_data:/my_data_dc cshmm_tf_release /bin/bash
+```
+Then you can access the files in ```~/my_data``` from ```/my_data_dc``` on docker container
+
+
