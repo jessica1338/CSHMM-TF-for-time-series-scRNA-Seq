@@ -24,6 +24,14 @@ RUN apt-get -y install libcurl4-openssl-dev
 RUN R --vanilla -e 'install.packages("devtools",repos="https://cran.cnr.berkeley.edu")'
 RUN R --vanilla -e 'library(devtools);install_github("statsmaths/genlasso")'
 RUN pip install rpy2==2.8.6
+RUN apt-get -y install git
+RUN apt-get -y install python-tk
+RUN pip install -U statsmodels
+#RUN git clone https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq.git
+#RUN git clone https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq.git
+#RUN git clone https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq.git
+#RUN rm -rf CSHMM-TF-for-time-series-scRNA-Seq
+RUN git clone https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq.git
 
 
 

@@ -205,7 +205,7 @@ def calculate_gene_start_time(model,gene_names):
             #print "min!"
             tf_idxs=np.array(map(lambda x: TF_names.tolist().index(x),reg_tfs))
             #model['gene_start_time'][i,j]=min(TF_start_time[i,tf_idxs])
-            return min(TF_start_time[i,tf_idxs])
+            return np.min(TF_start_time[i,tf_idxs])
 
     for i in range(n_path):
         #reg_gene_start_time=TF_start_time[i,gene_idxs]
@@ -968,8 +968,9 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         if sib_idx is not None:
             print "sib_idx: ",sib_idx
             cell_exps_parent = cell_exps[cell_path==sib_idx[-1]]
-            eTFs=assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names)
-            print eTFs
+            #remove this part for release
+            #eTFs=assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names)
+            #print eTFs
         #if sib_idx != None:
 
         #print cell_exps_p_g_sum
@@ -1265,7 +1266,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         tmp=[]
         if adjust_p and len(TF_pv_list)>0:
             for key in TF_pv_dict.keys():
-                tmp+=[min(TF_pv_dict[key])]
+                tmp+=[np.min(TF_pv_dict[key])]
             #print 'before adjusted: ',tmp
             p_adjusted = multipletests(tmp, method='fdr_bh')
             #print "after adjusted: ",p_adjusted[1]
@@ -1286,7 +1287,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
             tf_pvs=[]
             for key,val in TF_pv_dict.items():
                 tf_names+=[key]
-                tf_pvs+=[min(val)]
+                tf_pvs+=[np.min(val)]
             tf_names=np.array(tf_names)
             tf_pvs=np.array(tf_pvs)
             srt_idx=np.argsort(tf_pvs)
@@ -1358,7 +1359,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
                         #print 'ori pv: ', min[pv]
                         TF_filtered_pv+=[TF_pv_dict[tf][0]]
                     else:
-                        TF_filtered_pv+=[min(pv)]
+                        TF_filtered_pv+=[np.min(pv)]
                     #print tf
                     TF_filtered_method+=[TF_method[tf][min_idx]]
             else:
@@ -1367,7 +1368,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
                 if adjust_p:
                     TF_no_gene_pv+=[TF_pv_dict[tf][0]]
                 else:
-                    TF_no_gene_pv += [min(pv)]
+                    TF_no_gene_pv += [np.min(pv)]
                 TF_no_gene_method += [TF_method[tf][min_idx]]
         TF_filtered=np.array(TF_filtered)
         TF_filtered_pv=np.array(TF_filtered_pv)

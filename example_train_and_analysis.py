@@ -73,7 +73,7 @@ import CSHMM_TF_analysis_release as ANA
 import CSHMM_TF_train_release as ML
 from scipy.stats import hypergeom
 
-get_ipython().magic(u'matplotlib inline')
+#get_ipython().magic(u'matplotlib inline')
 
 
 # In[2]:
