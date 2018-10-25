@@ -63,9 +63,60 @@ docker run -it -v ~/my_data:/my_data_dc cshmm_tf_release /bin/bash
 ```
 Then you can access the files in ```~/my_data``` from ```/my_data_dc``` on docker container
 
-# INPUTS AND PRE-PROCESSING (We use the same input format as SCDIFF, so most of the following description are from their github page: https://github.com/phoenixding/scdiff/blob/master/README.md)
+## USAGE of CSHMM_TF_train_release.py
 
-CSHMM-TF takes two required input files (-d for data file and -tf for tf-target information), two optional files (-k/--cluster, -e/--etfListFile) and a few other optional parameters. 
+```
+usage: CSHMM_TF_train_release.py [-h] [-d DATA_FILE] [-dt DATA_FILE_TESTING]
+                                 [-tf TF_FILE] [-st STRUCTURE_FILE]
+                                 [-seed RANDOM_SEED] [-ni N_ITERATION]
+                                 [-k K_PARAM_RANGE] [-ns N_SPLIT]
+                                 [-ng N_GENE] [-lamb LAMB]
+                                 [-mn MODEL_NAME]
+                                 [-opt {genlasso,cvxpy}]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DATA_FILE, --data_file DATA_FILE
+                        specify the data file, if not specified then a default
+                        training data file will be used
+  -dt DATA_FILE_TESTING, --data_file_testing DATA_FILE_TESTING
+                        specify the testing data file and output best
+                        interation for testing, if not specifed then the model
+                        will not do testing.
+  -tf TF_FILE, --TF_file TF_FILE
+                        specify the tf-dna file, if not specifed then the
+                        model will not take TF into consideration.
+  -st STRUCTURE_FILE, --structure_file STRUCTURE_FILE
+                        specify the structure file, if not specified then a
+                        default structure file will be used
+  -seed RANDOM_SEED, --random_seed RANDOM_SEED
+                        specify the random seed, default is 0
+  -ni N_ITERATION, --n_iteration N_ITERATION
+                        specify the number of training iteration, default is
+                        10
+  -k K_PARAM_RANGE, --k_param_range K_PARAM_RANGE
+                        specify the range of K parameter, default is 10
+  -ns N_SPLIT, --n_split N_SPLIT
+                        specify the number of splits in learning K and assign
+                        cell time, default is 100
+  -ng N_GENE, --n_gene N_GENE
+                        specify the maximum number of genes used in training,
+                        default is 1000
+  -lamb LAMB, --lamb LAMB
+                        specify the regularizing parameter for L1 sparsity,
+                        default is 1
+  -mn MODEL_NAME, --model_name MODEL_NAME
+                        specify the model_name
+  -opt {genlasso,cvxpy}, --opt_method {genlasso,cvxpy}
+                        specify what optimization method to solve lasso
+                        problem, genlasso or cvxpy, default is cvxpy
+
+```
+
+
+## INPUTS AND PRE-PROCESSING (We use the same input format as SCDIFF, so most of the following description are from their github page: https://github.com/phoenixding/scdiff/blob/master/README.md)
+
+CSHMM_TF_train_release.py takes three required input files (-d for data file, -tf for tf-target information, and -st for initialized structure). 
 
 * __-d__  
 This specifies the single cell RNA-Seq expression data.  
@@ -110,4 +161,16 @@ You might need to unzip and re-format the file to satisfy the requirements. The 
 		 	
 	Example file:   
 	[example TF gene interaction file (we also use this file in our work)](/tfDNA_predicted_100.txt.update)
+
+* __-st__
+This is the file for initialized structure. You can generate one with your data at the step: https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq#run-the-initialization-part-within-the-container
+
+If you want to use other initial structure, please make sure that file has the following format:
+First line: some pairs of integers (p1,p2) separated by \t character, each interger denotes the index of path and (p1,p2) means that these two paths are connected.
+Second Line: (cn,p) seperated by \t, For each of this, means that the cell "cn" is assigned to path "p". Note that the cell_names must be the same as in your data file.
+
+
+##RESULTS
+(working)
+
 
