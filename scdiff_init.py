@@ -1,4 +1,5 @@
 import scdiff.scdiff as S
+import argparse
 def run_scdiff_init(data_file,tfdna=None,config="auto",large=None):
 #     E=S.TabFile(data_file).read('\t')
 #     print E[0][:3]
@@ -72,3 +73,22 @@ def run_scdiff_init(data_file,tfdna=None,config="auto",large=None):
     out_file.write('\t'.join(pairs)+'\n')
     out_file.write('\t'.join(pairs2)+'\n')
     out_file.close()
+if __name__=="__main__":
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-tf',"--tf_dna_file", help="specify the tf_target file")
+    parser.add_argument('-d',"--data_file", help="specify the data file")
+    parser.add_argument('-l',"--large_dataset", help="specify whether or not to speed up the initialization for large dataset (a different algorithm (PCA+k-means) will be applied)",type=int,default=0)
+    args=parser.parse_args()
+
+    large=None
+    if args.large_dataset>1:
+        large="True"
+    if args.data_file is not None:
+        data_file=args.data_file
+        tfdna=args.tf_dna_file
+        run_scdiff_init(data_file,tfdna,large=None) #if it takes too long, set large="True" for large dataset
+    else:
+        print "please use -d to specify the data file to run"
+        print "please use -tf to specify the tf-target file to run"
+
