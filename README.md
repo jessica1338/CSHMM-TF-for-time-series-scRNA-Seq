@@ -27,7 +27,8 @@ python scdiff_init.py -d treutlein2014 -tf tfDNA_predicted_100.txt.update
 ```
 
 Sometimes the scdiff initialization result will be different than the result in our paper when you run on different environment
-In this case you can skip this step use the provided initialization file "init_cluster_treutlein2014_lung.txt"
+In this case you can skip this step and  use the provided initialization file to check if the model training is working
+	[init_cluster_treutlein2014_lung.txt](/init_cluster_treutlein2014_lung.txt)
 
 ## Run the CSHMM-TF training
 
@@ -63,6 +64,22 @@ docker run -it -v ~/my_data:/my_data_dc cshmm_tf_release /bin/bash
 ```
 Then you can access the files in ```~/my_data``` from ```/my_data_dc``` on docker container
 
+## USAGE of scdiff_init.py
+```
+
+usage: scdiff_init.py [-h] [-tf TF_DNA_FILE] [-d DATA_FILE] [-l LARGE_DATASET]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -tf TF_DNA_FILE, --tf_dna_file TF_DNA_FILE
+                        specify the tf_target file
+  -d DATA_FILE, --data_file DATA_FILE
+                        specify the data file
+  -l LARGE_DATASET, --large_dataset LARGE_DATASET
+                        specify whether or not to speed up the initialization
+                        for large dataset (a different algorithm (PCA+k-means)
+                        will be applied)
+```
 ## USAGE of CSHMM_TF_train_release.py
 
 ```
@@ -163,11 +180,15 @@ You might need to unzip and re-format the file to satisfy the requirements. The 
 	[example TF gene interaction file (we also use this file in our work)](/tfDNA_predicted_100.txt.update)
 
 * __-st__
+
 This is the file for initialized structure. You can generate one with your data at the step: https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq#run-the-initialization-part-within-the-container
 
 If you want to use other initial structure, please make sure that file has the following format:
-First line: some pairs of integers (p1,p2) separated by \t character, each interger denotes the index of path and (p1,p2) means that these two paths are connected.
-Second Line: (cn,p) seperated by \t, For each of this, means that the cell "cn" is assigned to path "p". Note that the cell_names must be the same as in your data file.
+	*__First line__: some pairs of integers (p1,p2) separated by \t character, each interger denotes the index of path and (p1,p2) means that these two paths are connected.
+	*__Second Line__: (cn,p) seperated by \t, For each of this, means that the cell "cn" is assigned to path "p". Note that the cell_names must be the same as in your data file.
+	
+	Example file:   
+	[example file for initiali structure](/init_cluster_treutlein2014_lung.txt)
 
 
 ##RESULTS
