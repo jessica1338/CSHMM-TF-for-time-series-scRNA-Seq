@@ -1,15 +1,20 @@
 # CSHMM-TF-for-time-series-scRNA-Seq
 
-This github repository provides the source code for the paper CSHMM-TF for time-series single-cell RNA-Seq data
+This github repository provides the source code of Continuous-State Hidden Markov Model with Transcription Factors (CSHMM-TF) for the paper "Inferring TF activation order in time series scRNA-Seq studies". See the abstract below:
+  Methods for the analysis of time series single cell expression data (scRNA-Seq) either do not utilize information about transcription factors (TFs) and their targets or only study these as a post-processing step. Here we present the Continuous-State Hidden Markov Models TF (CSHMM-TF) method which integrates probabilistic modeling of scRNA-Seq data with the ability to assign TFs to specific activation points in the learned model. TFs predicted to regulate specific paths in the model are assumed to influence the emission probabilities for cells assigned to later time points on their path allowing us to identify not just the TFs controling each path but also their order of activation.  We tested CSHMM-TF on several mouse and human datasets. As we show, the method was able to identify known and novel TFs for all processes, assigned time of activation agrees with both expression information and prior knowledge and combinatorial predictions are supported by known interactions. We also show that CSHMM-TF improves upon prior methods that do not utilize TF-gene interaction when learning developmental models.  
+
+
+ ![model figure](./CSHMM-TF_model.PNG)
 
 ## Before you begin
+CSHMM-TF can run on Windows/MacOS/Linux systems, however you might need to solve package dependencies, which is sometimes very frustrating and time consuming. Instead of solving package dependencies yourselves, you can install docker and use the provided Dockerfile to build a simulated environment on which CSHMM-TF is guaranteed to be able to run.
 * Please make sure that you have **A Docker installation**. Follow the documentation here: https://docs.docker.com/engine/installation/
 
 * Download the Docker file for building docker image: https://raw.githubusercontent.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq/master/Dockerfile
 
 ## Install the Docker container
 
-Build the docker image, make sure that the Dockerfile is under the current directory
+Build the docker image, make sure that the downloaded Dockerfile is under the current directory
 ```
 docker build -t cshmm_tf_release .
 ```
@@ -138,8 +143,8 @@ For analyze, see https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-S
 
 For preparing dataset, see the following section.
 
-## INPUTS AND PRE-PROCESSING (We use the same input format as SCDIFF, so most of the following description are from their github page: https://github.com/phoenixding/scdiff/blob/master/README.md)
-
+## INPUTS AND PRE-PROCESSING 
+(We use the same input format as SCDIFF, so most of the following description are from their github page: https://github.com/phoenixding/scdiff/blob/master/README.md)
 CSHMM_TF_train_release.py takes three required input files (-d for data file, -tf for tf-target information, and -st for initialized structure). 
 
 * __-d__  
@@ -190,13 +195,12 @@ You might need to unzip and re-format the file to satisfy the requirements. The 
 This is the file for initialized structure. You can generate one with your data at the step: https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq#run-the-initialization-part-within-the-container .      
 If you want to use other initial structure, please make sure that file has the following format:
 	* __First line__: 	
-	some pairs of integers (p1,p2) separated by \t character, each integer denotes the index of path and (p1,p2) means that these two paths are connected.
+	Pairs of path IDs (p1,p2) separated by \t character, (p1,p2) means that these two paths are connected. Note that path 0 is the root node (left most, earliest node).
 	* __Second Line__: 
-	(cn,p) seperated by \t, For each of this, means that the cell cn is assigned to path p. Note that the cell_names must be the same as in your data file.
+	Pairs of (cn,p) seperated by \t, Each of these pair means that the Cell ID cn is assigned to path p. Note that the Cell ID must be the same as is in your data file.
 	
 	Example file:   
 	[example file for initiali structure](/init_cluster_treutlein2014_lung.txt)
-
 
 
 
