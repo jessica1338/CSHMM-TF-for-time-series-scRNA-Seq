@@ -87,7 +87,7 @@ if __name__=="__main__":
     if args.data_file is not None:
         data_file=args.data_file
         tfdna=args.tf_dna_file
-        run_scdiff_init(data_file,tfdna,large=None) #if it takes too long, set large="True" for large dataset
+        run_scdiff_init(data_file,tfdna,large=large) #if it takes too long, set large="True" for large dataset
     else:
         print "please use -d to specify the data file to run"
         print "please use -tf to specify the tf-target file to run"
