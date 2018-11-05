@@ -82,7 +82,7 @@ if __name__=="__main__":
     args=parser.parse_args()
 
     large=None
-    if args.large_dataset>1:
+    if args.large_dataset>0:
         large="True"
     if args.data_file is not None:
         data_file=args.data_file
