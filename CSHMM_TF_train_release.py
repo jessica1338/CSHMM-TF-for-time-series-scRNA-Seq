@@ -211,6 +211,8 @@ def calculate_gene_start_time(model,gene_names):
         #reg_gene_start_time=TF_start_time[i,gene_idxs]
         #print reg_gene_start_time
         #print 'path: ',i
+        #x=map(lambda x:_min_time(i,x),gene_names)
+        #print x
         model['gene_start_time'][i,:]=np.array(map(lambda x:_min_time(i,x),gene_names))
         #for j,gene in enumerate(gene_names):
         #    reg_tfs=gene_tf_dict[gene]
@@ -963,14 +965,13 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         
         print "cell_exps_p_g_sum.shape: ",cell_exps_p_g_sum.shape
         sib_idx= get_sibling_path_idx(i,path_info)
-        eTFs=[]
-        print "path: ",i, "eTFs:"
-        if sib_idx is not None:
-            print "sib_idx: ",sib_idx
-            cell_exps_parent = cell_exps[cell_path==sib_idx[-1]]
-            #remove this part for release
-            #eTFs=assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names)
-            #print eTFs
+        #eTFs=[]
+        #print "path: ",i, "eTFs:"
+        #if sib_idx is not None:
+        #    print "sib_idx: ",sib_idx
+        #    cell_exps_parent = cell_exps[cell_path==sib_idx[-1]]
+        #    eTFs=assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names)
+        #    print eTFs
         #if sib_idx != None:
 
         #print cell_exps_p_g_sum
@@ -1266,7 +1267,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         tmp=[]
         if adjust_p and len(TF_pv_list)>0:
             for key in TF_pv_dict.keys():
-                tmp+=[np.min(TF_pv_dict[key])]
+                tmp+=[min(TF_pv_dict[key])]
             #print 'before adjusted: ',tmp
             p_adjusted = multipletests(tmp, method='fdr_bh')
             #print "after adjusted: ",p_adjusted[1]
@@ -1287,7 +1288,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
             tf_pvs=[]
             for key,val in TF_pv_dict.items():
                 tf_names+=[key]
-                tf_pvs+=[np.min(val)]
+                tf_pvs+=[min(val)]
             tf_names=np.array(tf_names)
             tf_pvs=np.array(tf_pvs)
             srt_idx=np.argsort(tf_pvs)
@@ -1359,7 +1360,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
                         #print 'ori pv: ', min[pv]
                         TF_filtered_pv+=[TF_pv_dict[tf][0]]
                     else:
-                        TF_filtered_pv+=[np.min(pv)]
+                        TF_filtered_pv+=[min(pv)]
                     #print tf
                     TF_filtered_method+=[TF_method[tf][min_idx]]
             else:
@@ -1368,7 +1369,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
                 if adjust_p:
                     TF_no_gene_pv+=[TF_pv_dict[tf][0]]
                 else:
-                    TF_no_gene_pv += [np.min(pv)]
+                    TF_no_gene_pv += [min(pv)]
                 TF_no_gene_method += [TF_method[tf][min_idx]]
         TF_filtered=np.array(TF_filtered)
         TF_filtered_pv=np.array(TF_filtered_pv)
@@ -1501,7 +1502,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         p["TF_no_gene_pv"]=TF_no_gene_pv
         p["TF_no_gene_method"]=TF_no_gene_method
         p["sorted_tf_tp"]=sorted_tf_tp
-        p["sorted_eTFs"]=eTFs
+        #p["sorted_eTFs"]=eTFs
         #p["TF_pos_dict"]=TF_pos_dict
 def set_alpha_logistic_regression(model,gene_tf_table,cutoff=1):
     g_param=model["g_param"]
@@ -1770,7 +1771,7 @@ if __name__=='__main__':
     cv = args.cross_validation
     
     if args.TF_file is not None:
-        dTD=getdTD("tfDNA_predicted_100.txt.update")
+        dTD=getdTD(args.TF_file)
         TF_names = np.array(map(lambda x: x.lower(),dTD.keys()))
 #     gene_tf_table = gen_gene_tf_table()
 #     gene_tf_table=[]
