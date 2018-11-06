@@ -11,7 +11,7 @@ from sklearn.cluster import KMeans,SpectralClustering
 from scipy.spatial import distance
 from numpy import inf
 import pickle
-import multiprocessing as mp
+#import multiprocessing as mp
 import sys
 from scipy.special import erf
 from sklearn.linear_model import LogisticRegression
