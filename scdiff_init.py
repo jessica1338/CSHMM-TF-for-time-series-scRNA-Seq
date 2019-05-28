@@ -1,6 +1,6 @@
 import scdiff.scdiff as S
 import argparse
-def run_scdiff_init(data_file,tfdna=None,config="auto",large=None):
+def run_scdiff_init(data_file,tfdna=None,config="auto",large=None,dsync=None,output_file=None):
 #     E=S.TabFile(data_file).read('\t')
 #     print E[0][:3]
 #     #global GL # Gene list global variable
@@ -43,13 +43,16 @@ def run_scdiff_init(data_file,tfdna=None,config="auto",large=None):
     firstTime=min([float(item.T) for item in AllCells])
     
     
-    G1=S.Graph(AllCells,tfdna,config,large,None,None)
+    G1=S.Graph(AllCells,tfdna,config,large,dsync)
 
 #     if large:
 #         G1=S.Graph(AllCells,'auto','True')  #Cells: List of Cell instances 
 #     else:
 #         G1=S.Graph(AllCells,'auto',None)  #Cells: List of Cell instances 
-    out_file = open('init_cluster_'+data_file+'.txt','w')
+    out_file_name='init_cluster_'+data_file+'.txt'
+    if output_file is not None:
+        out_file_name=output_file
+    out_file = open(out_file_name,"w")
     pairs=[]
     pairs2=[]
     print 'G1'
@@ -78,16 +81,25 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-tf',"--tf_dna_file", help="specify the tf_target file")
     parser.add_argument('-d',"--data_file", help="specify the data file")
+    parser.add_argument('-c',"--config_file", help="specify the config file for #cluster in each time point")
+    parser.add_argument('-ds',"--dsync", help="specify 1/0 to disable the cell cynchronization", type=int, default=0)
     parser.add_argument('-l',"--large_dataset", help="specify whether or not to speed up the initialization for large dataset (a different algorithm (PCA+k-means) will be applied)",type=int,default=0)
+    parser.add_argument('-o',"--output_file", help="specify the output file name, if not specified, a default output file name will be used")
     args=parser.parse_args()
 
     large=None
+    config_file="auto"
+    dsync=None
     if args.large_dataset>0:
         large="True"
+    if args.config_file is not None:
+        config_file = args.config_file
+    if args.dsync>0:
+        dsync="True"
     if args.data_file is not None:
         data_file=args.data_file
         tfdna=args.tf_dna_file
-        run_scdiff_init(data_file,tfdna,large=large) #if it takes too long, set large="True" for large dataset
+        run_scdiff_init(data_file,tfdna,config=config_file,large=large,dsync=dsync,output_file=args.output_file) #if it takes too long, set large="True" for large dataset
     else:
         print "please use -d to specify the data file to run"
         print "please use -tf to specify the tf-target file to run"
