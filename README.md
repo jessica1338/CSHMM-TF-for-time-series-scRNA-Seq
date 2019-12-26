@@ -171,7 +171,7 @@ The input file has the following formatting requirements:
 
 * __-tf__  
 This specifies the TF-gene interaction data.  In other words, it specifies the TF targets. 
-Under the tf_dna directory, we provided a [human TF-gene interaction file](tf_dna/Human_TF_targets.txt) and a [mouse TF-gene interaction file](tf_dna/Mouse_TF_targets.txt) inferred using the strategy in our previous study (https://www.ncbi.nlm.nih.gov/pubmed/20219943). 
+Under the tf_dna directory, we provided a [human TF-gene interaction file](Human_TF_targets.txt) and a [mouse TF-gene interaction file](Mouse_TF_targets.txt) inferred using the strategy in our previous study (https://www.ncbi.nlm.nih.gov/pubmed/20219943). 
 Although this TF-gene interactions are collected in human and mouse, they should be also able to apply to other close species.
 Besides, in our previous work DREM (http://sb.cs.cmu.edu/drem/), we did collected the TF-gene interactions for common species including human, mouse, fry, E.coli, yeast, Arabidopsis. 
 Please refer to  http://sb.cs.cmu.edu/drem/DREMmanual.pdf appendix B for complete details. 
