@@ -22,7 +22,7 @@ import pdb
 from rpy2.robjects.packages import importr
 from rpy2.robjects import numpy2ri
 
-from statsmodels.sandbox.stats.multicomp import multipletests
+#from statsmodels.sandbox.stats.multicomp import multipletests
 import pkg_resources
 
 numpy2ri.activate()
@@ -822,7 +822,7 @@ def cv_split_idx(cell_day,n_fold=5):
             fold_idx[ud_idx[batch*i:]]=i+1
     return np.array(fold_idx,dtype=int)
 
-def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut=0.1,cutoff=1,gtop=1000,fold_change=1.5,k_ratio=0.9,ttest_pvs=[0.05],FC_cuts=[0.6,1.0,1.5],marker=[],adjust_p=False,save=None):
+def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut=0.1,cutoff=1,gtop=1000,fold_change=1.5,k_ratio=0.9,ttest_pvs=[0.05],FC_cuts=[0.6,1.0,1.5],marker=[],save=None):
 #def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,pcut=0.1,marker=[],save=None):
     print 'assigning TF to each path......'
     marker_idx = [gene_names.tolist().index(x.lower()) for x in marker]
@@ -1265,14 +1265,14 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         for pval,tf in TF_pv_list:
             TF_pv_dict[tf.lower()]+=[pval]
         tmp=[]
-        if adjust_p and len(TF_pv_list)>0:
-            for key in TF_pv_dict.keys():
-                tmp+=[min(TF_pv_dict[key])]
-            #print 'before adjusted: ',tmp
-            p_adjusted = multipletests(tmp, method='fdr_bh')
-            #print "after adjusted: ",p_adjusted[1]
-            for key,val in zip(TF_pv_dict.keys(),p_adjusted[1]):
-                TF_pv_dict[key]=[val]
+        #if adjust_p and len(TF_pv_list)>0:
+        #    for key in TF_pv_dict.keys():
+        #        tmp+=[min(TF_pv_dict[key])]
+        #    #print 'before adjusted: ',tmp
+        #    p_adjusted = multipletests(tmp, method='fdr_bh')
+        #    #print "after adjusted: ",p_adjusted[1]
+        #    for key,val in zip(TF_pv_dict.keys(),p_adjusted[1]):
+        #        TF_pv_dict[key]=[val]
         for (pv,tf),method in zip(tf_all,method_all):
             #print tf, pv ,method
             #if adjust_p:
@@ -1355,21 +1355,21 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
                     #print "TF_method[tf] length", len(TF_method[tf])
                     #min_idx=np.argmin(pv)
                     TF_filtered+=[tf]
-                    if adjust_p:
-                        #print 'add pv:', TF_pv_dict[tf]
-                        #print 'ori pv: ', min[pv]
-                        TF_filtered_pv+=[TF_pv_dict[tf][0]]
-                    else:
-                        TF_filtered_pv+=[min(pv)]
+                    #if adjust_p:
+                    #    #print 'add pv:', TF_pv_dict[tf]
+                    #    #print 'ori pv: ', min[pv]
+                    #    TF_filtered_pv+=[TF_pv_dict[tf][0]]
+                    #else:
+                    TF_filtered_pv+=[min(pv)]
                     #print tf
                     TF_filtered_method+=[TF_method[tf][min_idx]]
             else:
                 print tf, " is not in gene names"
                 TF_no_gene+=[tf]
-                if adjust_p:
-                    TF_no_gene_pv+=[TF_pv_dict[tf][0]]
-                else:
-                    TF_no_gene_pv += [min(pv)]
+                #if adjust_p:
+                #    TF_no_gene_pv+=[TF_pv_dict[tf][0]]
+                #else:
+                TF_no_gene_pv += [min(pv)]
                 TF_no_gene_method += [TF_method[tf][min_idx]]
         TF_filtered=np.array(TF_filtered)
         TF_filtered_pv=np.array(TF_filtered_pv)
