@@ -21,8 +21,9 @@ RUN pip install sklearn
 RUN apt-get -y install r-base
 RUN apt-get -y install libssl-dev
 RUN apt-get -y install libcurl4-openssl-dev
-RUN R --vanilla -e 'install.packages("devtools",repos="https://cran.cnr.berkeley.edu")'
-RUN R --vanilla -e 'library(devtools);install_github("statsmaths/genlasso")'
+# if this doesn't work, try select another mirror from https://cran.r-project.org/mirrors.html
+RUN R --vanilla -e 'install.packages("remotes",repos="http://lib.stat.cmu.edu/R/CRAN/")'
+RUN R --vanilla -e 'remotes::install_github("glmgen/genlasso")'
 RUN pip install rpy2==2.8.6
 RUN apt-get -y install git
 RUN apt-get -y install python-tk
