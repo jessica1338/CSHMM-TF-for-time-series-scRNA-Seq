@@ -967,10 +967,10 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         sib_idx= get_sibling_path_idx(i,path_info)
         #eTFs=[]
         #print "path: ",i, "eTFs:"
-        #if sib_idx is not None:
+        if sib_idx is not None:
         #    print "sib_idx: ",sib_idx
-        #    cell_exps_parent = cell_exps[cell_path==sib_idx[-1]]
-        #    eTFs=assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names)
+            cell_exps_parent = cell_exps[cell_path==sib_idx[-1]]
+            eTFs=assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names)
         #    print eTFs
         #if sib_idx != None:
 
@@ -1502,7 +1502,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         p["TF_no_gene_pv"]=TF_no_gene_pv
         p["TF_no_gene_method"]=TF_no_gene_method
         p["sorted_tf_tp"]=sorted_tf_tp
-        #p["sorted_eTFs"]=eTFs
+        p["sorted_eTFs"]=eTFs
         #p["TF_pos_dict"]=TF_pos_dict
 def set_alpha_logistic_regression(model,gene_tf_table,cutoff=1):
     g_param=model["g_param"]
