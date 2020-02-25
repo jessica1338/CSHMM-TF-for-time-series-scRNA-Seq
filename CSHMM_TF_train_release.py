@@ -965,7 +965,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         
         print "cell_exps_p_g_sum.shape: ",cell_exps_p_g_sum.shape
         sib_idx= get_sibling_path_idx(i,path_info)
-        #eTFs=[]
+        eTFs=[]
         #print "path: ",i, "eTFs:"
         if sib_idx is not None:
         #    print "sib_idx: ",sib_idx
