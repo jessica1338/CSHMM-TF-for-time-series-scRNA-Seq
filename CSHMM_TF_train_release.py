@@ -87,7 +87,7 @@ def load_data(file_name,max_gene):
     cell_day=[]
     cell_labels=[]
     cell_exps=[]
-    gene_names=np.array(head.split('\t')[3:])
+    gene_names=np.array(map(lambda x:x.lower(),head.split('\t')[3:]))
     for line in lines[1:]:
         line=line.replace('\n','')
         splits=line.split('\t')
@@ -962,15 +962,15 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         mean_path_g[i]=np.mean(cell_exps_p,axis=0)
         cell_time_p=cell_time[p_idx]
         cell_exps_p_g_sum = np.sum(cell_exps_p,axis=0)/cell_exps_p.shape[1]
-        
+        print "cell_exps_p.shape",cell_exps_p.shape
         print "cell_exps_p_g_sum.shape: ",cell_exps_p_g_sum.shape
         sib_idx= get_sibling_path_idx(i,path_info)
-        eTFs=[]
+        #eTFs=[]
         #print "path: ",i, "eTFs:"
-        if sib_idx is not None:
+        #if sib_idx is not None:
         #    print "sib_idx: ",sib_idx
-            cell_exps_parent = cell_exps[cell_path==sib_idx[-1]]
-            eTFs=assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names)
+        #    cell_exps_parent = cell_exps[cell_path==sib_idx[-1]]
+        #    eTFs=assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names)
         #    print eTFs
         #if sib_idx != None:
 
@@ -1174,7 +1174,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
 
                     #fc_cut_idx = g_diff > fc_cut
                     #expressed_fc_idx=np.logical_and(fc_cut_idx,g_diff>exp_cutoff)
-                     
+                    print 'mean_path_g.keys()',mean_path_g.keys()
                     new_g_diff=np.fabs(mean_path_g[sib_idx[-1]]-mean_path_g[i]) 
                     fc_cut_idx = new_g_diff > fc_cut
                     'path_parent res3'
@@ -1330,7 +1330,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         
         for tf,pv in TF_pvalue.items():
             min_idx=np.argmin(pv)
-            #print 'pv:', TF_pv_dict[tf]
+            print 'TF pv:', tf, TF_pv_dict[tf]
             if TF_pv_dict[tf][0]>pcut:
                 continue
         
@@ -1344,9 +1344,14 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
                 #print len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])
                 if g_pa[tf_idx] + g_pb[tf_idx] < exp_cutoff:
                     print tf, "not expressed with value: ",g_pa[tf_idx] + g_pb[tf_idx] 
-                elif (len(cell_exps_p[cell_exps_p[:,tf_idx]>0])<cell_exps_p.shape[0]*0.1) and (sib_idx is None or sib_idx is not None and len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])<cell_exps_parent.shape[0]*0.1):
-                    if sib_idx is not None:
-                        print "len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0]),"/",cell_exps_parent.shape[0]
+                #elif (len(cell_exps_p[cell_exps_p[:,tf_idx]>0])<cell_exps_p.shape[0]*0.1) and (sib_idx is None or sib_idx is not None and len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])<cell_exps_parent.shape[0]*0.1):
+                #    if sib_idx is not None:
+                #        print "len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0]),"/",cell_exps_parent.shape[0]
+                #    print "len(cell_exps_p[cell_exps_p[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_p[cell_exps_p[:,tf_idx]>0]),"/",cell_exps_p.shape[0]
+                #    print tf, "not expressed with less than 10% of cells expressed in the path"
+                elif (len(cell_exps_p[cell_exps_p[:,tf_idx]>0])<cell_exps_p.shape[0]*0.1): #and (sib_idx is None or sib_idx is not None and len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])<cell_exps_parent.shape[0]*0.1):
+                    #if sib_idx is not None:
+                    #    print "len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0]),"/",cell_exps_parent.shape[0]
                     print "len(cell_exps_p[cell_exps_p[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_p[cell_exps_p[:,tf_idx]>0]),"/",cell_exps_p.shape[0]
                     print tf, "not expressed with less than 10% of cells expressed in the path"
                 else:
@@ -1502,7 +1507,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         p["TF_no_gene_pv"]=TF_no_gene_pv
         p["TF_no_gene_method"]=TF_no_gene_method
         p["sorted_tf_tp"]=sorted_tf_tp
-        p["sorted_eTFs"]=eTFs
+        #p["sorted_eTFs"]=eTFs
         #p["TF_pos_dict"]=TF_pos_dict
 def set_alpha_logistic_regression(model,gene_tf_table,cutoff=1):
     g_param=model["g_param"]
