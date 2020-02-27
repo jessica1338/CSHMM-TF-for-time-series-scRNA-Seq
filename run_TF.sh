@@ -8,5 +8,4 @@ python CSHMM_TF_train_release.py \
 --cross_validation 0 \
 --random_seed 5 \
 -k 10 \
---model_name lung_developmental_TF_v7 \
->>  lung_developmental_TF_v7.log 2>&1 
+--model_name lung_developmental_TF_v7  #>>  lung_developmental_TF_v7.log 2>&1 
