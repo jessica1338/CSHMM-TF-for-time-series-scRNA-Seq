@@ -29,6 +29,6 @@ RUN pip install rpy2==2.8.6
 RUN apt-get -y install git
 RUN apt-get -y install python-tk
 #RUN pip install -U statsmodels
-
+RUN pip install dill
 RUN git clone https://github.com/jessica1338/CSHMM-TF-for-time-series-scRNA-Seq.git
 RUN mkdir CSHMM-TF-for-time-series-scRNA-Seq/TF_analysis_result
