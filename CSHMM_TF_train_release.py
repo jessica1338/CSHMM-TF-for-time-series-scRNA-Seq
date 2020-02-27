@@ -1,6 +1,6 @@
 import numpy as np
 import argparse
-from cvxpy import *
+#from cvxpy import *
 #import random
 import progressbar
 from collections import defaultdict
@@ -10,6 +10,7 @@ from sklearn.metrics.cluster import adjusted_rand_score
 from sklearn.cluster import KMeans,SpectralClustering
 from scipy.spatial import distance
 from numpy import inf
+import dill
 import pickle
 #import multiprocessing as mp
 import sys
@@ -598,15 +599,15 @@ def optimize_g_param(model,hid_var,cell_exps,gene_names,opt_method="genlasso"):#
         lam=lamb
         y=Xjs/sigma_j
         X=A1/sigma_j
-        if opt_method=="genlasso":
-            g_param[:,j]=solve_genlasso(y, X, D, lam).flatten()
-        elif opt_method=='cvxpy':
-            g_js = Variable(n_state)
-            objective = Minimize(0.5*sum_squares((A1*g_js-Xjs)/sigma_j)+pnorm(A2*g_js,1))
-            constraints=[g_js>=0]
-            prob = Problem(objective, constraints)
-            result = prob.solve(solver=SCS)
-            g_param[:,j]=g_js.value.flatten()
+        #if opt_method=="genlasso":
+        g_param[:,j]=solve_genlasso(y, X, D, lam).flatten()
+        #elif opt_method=='cvxpy':
+        #    g_js = Variable(n_state)
+        #    objective = Minimize(0.5*sum_squares((A1*g_js-Xjs)/sigma_j)+pnorm(A2*g_js,1))
+        #    constraints=[g_js>=0]
+        #    prob = Problem(objective, constraints)
+        #    result = prob.solve(solver=SCS)
+        #    g_param[:,j]=g_js.value.flatten()
         if progress_bar:
             bar.update(j)
     g_param[g_param<0]=0
@@ -748,7 +749,7 @@ def optimize_likelihood(cell_exps, gene_names, model, hid_var, model_name,store_
         score = model_score(model,hid_var,cell_exps,method='ALL')
         print 'model score: ',score
         
-        optimize_g_param(model,hid_var,cell_exps,gene_names,opt_method=args.opt_method)
+        optimize_g_param(model,hid_var,cell_exps,gene_names)#,opt_method=args.opt_method)
         print 'after M-step g_param full log-likelihood: ',log_likelihood(model,hid_var,cell_exps)
        
         sys.stdout.flush()
@@ -891,10 +892,11 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         if pv<pcut and fc < -fcut:
             return [-1, pv, fc]
         return [0,pv,fc]
-    def assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names,fcut=0.6,tflist=None):
+    def assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names,fcut=0.6):
         if sib_idx is None:
             return None
-        tflistpath=pkg_resources.resource_filename(__name__,"HumanTFList.txt") if tflist==None else tflist
+        #tflistpath=pkg_resources.resource_filename(__name__,"HumanTFList.txt") if tflist==None else tflist
+        tflistpath=args.eTF_file 
         try:
             with open(tflistpath,'r') as f:
                 TFs=f.readlines()
@@ -965,12 +967,12 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         print "cell_exps_p.shape",cell_exps_p.shape
         print "cell_exps_p_g_sum.shape: ",cell_exps_p_g_sum.shape
         sib_idx= get_sibling_path_idx(i,path_info)
-        #eTFs=[]
+        eTFs=[]
         #print "path: ",i, "eTFs:"
-        #if sib_idx is not None:
+        if sib_idx is not None and args.eTF_file is not None:
         #    print "sib_idx: ",sib_idx
-        #    cell_exps_parent = cell_exps[cell_path==sib_idx[-1]]
-        #    eTFs=assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names)
+            cell_exps_parent = cell_exps[cell_path==sib_idx[-1]]
+            eTFs=assign_eTFs(cell_exps,cell_exps_p,cell_path,sib_idx,gene_names)
         #    print eTFs
         #if sib_idx != None:
 
@@ -1349,10 +1351,10 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
                 #        print "len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0]),"/",cell_exps_parent.shape[0]
                 #    print "len(cell_exps_p[cell_exps_p[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_p[cell_exps_p[:,tf_idx]>0]),"/",cell_exps_p.shape[0]
                 #    print tf, "not expressed with less than 10% of cells expressed in the path"
-                elif (len(cell_exps_p[cell_exps_p[:,tf_idx]>0])<cell_exps_p.shape[0]*0.1): #and (sib_idx is None or sib_idx is not None and len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])<cell_exps_parent.shape[0]*0.1):
+                elif (len(cell_exps_p[cell_exps_p[:,tf_idx]>0])<cell_exps_p.shape[0]*0.1) and args.eTF is not None and (sib_idx is None or sib_idx is not None and len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])<cell_exps_parent.shape[0]*0.1):
                     #if sib_idx is not None:
                     #    print "len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0]),"/",cell_exps_parent.shape[0]
-                    print "len(cell_exps_p[cell_exps_p[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_p[cell_exps_p[:,tf_idx]>0]),"/",cell_exps_p.shape[0]
+                    #print "len(cell_exps_p[cell_exps_p[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_p[cell_exps_p[:,tf_idx]>0]),"/",cell_exps_p.shape[0]
                     print tf, "not expressed with less than 10% of cells expressed in the path"
                 else:
                 #if cell_exps_p_g_sum[tf_idx] > exp_cutoff:
@@ -1507,7 +1509,8 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
         p["TF_no_gene_pv"]=TF_no_gene_pv
         p["TF_no_gene_method"]=TF_no_gene_method
         p["sorted_tf_tp"]=sorted_tf_tp
-        #p["sorted_eTFs"]=eTFs
+        if args.eTF_file is not None:
+            p["sorted_eTFs"]=eTFs
         #p["TF_pos_dict"]=TF_pos_dict
 def set_alpha_logistic_regression(model,gene_tf_table,cutoff=1):
     g_param=model["g_param"]
@@ -1715,6 +1718,7 @@ if __name__=='__main__':
     parser.add_argument('-d',"--data_file", help="specify the data file, if not specified then a default training data file will be used")
     parser.add_argument('-dt',"--data_file_testing", help="specify the testing data file and output best interation for testing, if not specifed then the model will not do testing.", default = None)
     parser.add_argument('-tf',"--TF_file", help="specify the tf-dna file, if not specifed then the model will not take TF into consideration.", default = None)
+    parser.add_argument('-etf',"--eTF_file", help="specify the etf file, if not specifed then the model will not take eTF into consideration.", default = None)
     
     parser.add_argument('-st',"--structure_file", help="specify the structure file, if not specified then a default structure file will be used")
     parser.add_argument('-seed',"--random_seed", help="specify the random seed, default is 0", type=int,default=0) 
@@ -1743,7 +1747,7 @@ if __name__=='__main__':
     parser.add_argument('-pg',"--progress_bar", type=int,choices=[0,1],default=0, help=argparse.SUPPRESS)
     parser.add_argument('-mn',"--model_name", help="specify the model_name",default = None)
     parser.add_argument('-cv',"--cross_validation", help="specify whether to use 5-fold cross_validation, 0 means not, default is 0", type=int, choices=[0,1],default=0)
-    parser.add_argument('-opt',"--opt_method", help="specify what optimization method to solve lasso problem, genlasso or cvxpy, default is cvxpy", type=str, choices=["genlasso","cvxpy"],default="cvxpy")
+    #parser.add_argument('-opt',"--opt_method", help="specify what optimization method to solve lasso problem, genlasso or cvxpy, default is cvxpy", type=str, choices=["genlasso","cvxpy"],default="cvxpy")
         
     
     args=parser.parse_args()
