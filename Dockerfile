@@ -9,8 +9,9 @@ RUN apt-get -y install vim
 RUN apt-get -y install curl
 RUN curl https://bootstrap.pypa.io/get-pip.py | python
 RUN ln -s /usr/local/bin/pip /usr/bin/pip
-RUN pip install --upgrade scdiff
-RUN pip install cvxpy
+#RUN pip install --upgrade scdiff
+RUN pip install --upgrade https://github.com/phoenixding/scdiff/zipball/master
+#RUN pip install cvxpy
 RUN pip install progressbar
 RUN apt-get -y install libgraphviz-dev 
 RUN pip install pygraphviz
