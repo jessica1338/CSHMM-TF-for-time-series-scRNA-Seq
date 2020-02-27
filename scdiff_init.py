@@ -1,7 +1,7 @@
 #import scdiff.scdiff as S
 #import sys
 #sys.path.insert(0,'scdiff/scdiff/')
-import scdiff as S
+import scdiff.scdiff as S
 import argparse
 def run_scdiff_init(data_file,tfdna=None,config="auto",large=None,dsync=None,output_file=None):
 #     E=S.TabFile(data_file).read('\t')
