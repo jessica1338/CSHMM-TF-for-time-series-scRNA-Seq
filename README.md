@@ -19,10 +19,16 @@ Build the docker image, make sure that the downloaded Dockerfile is under the cu
 docker build -t cshmm_tf_release .
 ```
 
+Or you can download the image from here https://drive.google.com/file/d/1hrF4PWHcM2v5XJ3uourxA0Vvv13cGrfK/view?usp=sharing and use the following command to load it
+```
+docker load < cshmm_tf_release_latest.tar.gz
+```
+
 Run and connect to the container:
 ```
  docker run -it cshmm_tf_release /bin/bash
 ```
+
 
 ## Run the initialization part within the container
 
