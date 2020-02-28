@@ -1351,7 +1351,7 @@ def assign_path_TF(dTD,model,hid_var,gene_names,cell_exps,assign_by_K=False,pcut
                 #        print "len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0]),"/",cell_exps_parent.shape[0]
                 #    print "len(cell_exps_p[cell_exps_p[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_p[cell_exps_p[:,tf_idx]>0]),"/",cell_exps_p.shape[0]
                 #    print tf, "not expressed with less than 10% of cells expressed in the path"
-                elif (len(cell_exps_p[cell_exps_p[:,tf_idx]>0])<cell_exps_p.shape[0]*0.1) and args.eTF is not None and (sib_idx is None or sib_idx is not None and len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])<cell_exps_parent.shape[0]*0.1):
+                elif (len(cell_exps_p[cell_exps_p[:,tf_idx]>0])<cell_exps_p.shape[0]*0.1) and args.eTF_file is not None and (sib_idx is None or sib_idx is not None and len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])<cell_exps_parent.shape[0]*0.1):
                     #if sib_idx is not None:
                     #    print "len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_parent[cell_exps_parent[:,tf_idx]>0]),"/",cell_exps_parent.shape[0]
                     #print "len(cell_exps_p[cell_exps_p[:,tf_idx]>0])/#cell in path: : ", len(cell_exps_p[cell_exps_p[:,tf_idx]>0]),"/",cell_exps_p.shape[0]
