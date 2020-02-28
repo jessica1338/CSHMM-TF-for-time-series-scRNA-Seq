@@ -135,9 +135,10 @@ optional arguments:
                         default is 1
   -mn MODEL_NAME, --model_name MODEL_NAME
                         specify the model_name
-  -opt {genlasso,cvxpy}, --opt_method {genlasso,cvxpy}
-                        specify what optimization method to solve lasso
-                        problem, genlasso or cvxpy, default is cvxpy
+ -etf ETF_FILE, --eTF_file eTF_FILE
+                        specify the eTF file, if not specifed then the
+                        model will not take eTF into consideration.
+			etf is the TF assignment based on expression
 
 ```
 
