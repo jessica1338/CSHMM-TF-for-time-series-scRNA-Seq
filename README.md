@@ -95,12 +95,12 @@ optional arguments:
 
 ```
 usage: CSHMM_TF_train_release.py [-h] [-d DATA_FILE] [-dt DATA_FILE_TESTING]
-                                 [-tf TF_FILE] [-st STRUCTURE_FILE]
-                                 [-seed RANDOM_SEED] [-ni N_ITERATION]
-                                 [-k K_PARAM_RANGE] [-ns N_SPLIT]
-                                 [-ng N_GENE] [-lamb LAMB]
-                                 [-mn MODEL_NAME]
-                                 [-opt {genlasso,cvxpy}]
+                                 [-tf TF_FILE] [-etf ETF_FILE]
+                                 [-st STRUCTURE_FILE] [-seed RANDOM_SEED]
+                                 [-ni N_ITERATION] [-k K_PARAM_RANGE]
+                                 [-ns N_SPLIT] [-na N_ANCHOR] [-ng N_GENE]
+                                 [-lamb LAMB] [-ps {0,1}] [-mn MODEL_NAME]
+                                 [-cv {0,1}]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -114,6 +114,9 @@ optional arguments:
   -tf TF_FILE, --TF_file TF_FILE
                         specify the tf-dna file, if not specifed then the
                         model will not take TF into consideration.
+  -etf ETF_FILE, --eTF_file ETF_FILE
+                        specify the etf file, if not specifed then the model
+                        will not take eTF into consideration.
   -st STRUCTURE_FILE, --structure_file STRUCTURE_FILE
                         specify the structure file, if not specified then a
                         default structure file will be used
@@ -127,19 +130,23 @@ optional arguments:
   -ns N_SPLIT, --n_split N_SPLIT
                         specify the number of splits in learning K and assign
                         cell time, default is 100
+  -na N_ANCHOR, --n_anchor N_ANCHOR
+                        specify the number of anchor cells to remain in each
+                        path during training, default is 0
   -ng N_GENE, --n_gene N_GENE
                         specify the maximum number of genes used in training,
                         default is 1000
   -lamb LAMB, --lamb LAMB
                         specify the regularizing parameter for L1 sparsity,
                         default is 1
+  -ps {0,1}, --assign_by_prob_sampling {0,1}
+                        specify the whether to use multinomial sampling in
+                        path assignment, default is 1
   -mn MODEL_NAME, --model_name MODEL_NAME
                         specify the model_name
- -etf ETF_FILE, --eTF_file eTF_FILE
-                        specify the eTF file, if not specifed then the
-                        model will not take eTF into consideration.
-			etf is the TF assignment based on expression
-
+  -cv {0,1}, --cross_validation {0,1}
+                        specify whether to use 5-fold cross_validation, 0
+                        means not, default is 0
 ```
 
 ## Some steps on how to train/analyze on your dataset
